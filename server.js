@@ -13,15 +13,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Trust proxy and handle protocol
+// Trust proxy
 app.enable('trust proxy');
-app.use((req, res, next) => {
-    if (req.headers['x-forwarded-proto'] === 'https') {
-        res.redirect(`http://${req.headers.host}${req.url}`);
-    } else {
-        next();
-    }
-});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
