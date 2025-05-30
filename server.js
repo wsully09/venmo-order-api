@@ -13,10 +13,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Disable HTTPS redirect
+// Trust proxy and handle protocol
+app.enable('trust proxy');
 app.use((req, res, next) => {
-    res.set('X-Forwarded-Proto', 'http');
-    next();
+    if (req.headers['x-forwarded-proto'] === 'https') {
+        res.redirect(`http://${req.headers.host}${req.url}`);
+    } else {
+        next();
+    }
 });
 
 // Health check endpoint
