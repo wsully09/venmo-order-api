@@ -16,6 +16,16 @@ app.use(express.json());
 // Trust proxy
 app.enable('trust proxy');
 
+// Add headers to prevent HTTPS redirect
+app.use((req, res, next) => {
+    res.set({
+        'X-Forwarded-Proto': 'http',
+        'X-Forwarded-Ssl': 'off',
+        'X-Url-Scheme': 'http'
+    });
+    next();
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
